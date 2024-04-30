@@ -1,0 +1,9 @@
+{
+    "name": "node-generator",
+    "aliases": ["node-gen"],
+    "description": "Генерация класса SiNode.",
+    "run": {
+        "type": "python-script",
+        "file": "tool.py"
+    }
+}

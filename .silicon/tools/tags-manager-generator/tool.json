@@ -1,0 +1,12 @@
+{
+    "name": "tags-manager-generator",
+    "aliases": [
+        "tags-manager-gen", "tag-manager-generator", "tag-manager-gen", "tags-generator", "tags-gen", "tag-generator",
+        "tag-gen"
+    ],
+    "description": "Генерация класса SiTagsManager.",
+    "run": {
+        "type": "python-script",
+        "file": "tool.py"
+    }
+}

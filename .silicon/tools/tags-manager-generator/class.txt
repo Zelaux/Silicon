@@ -1,0 +1,162 @@
+package ru.vladislav117.silicon.tags;
+
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
+import org.jetbrains.annotations.Nullable;
+import ru.vladislav117.silicon.namespace.SiNamespace;
+
+import java.util.HashMap;
+
+/**
+ * Менеджер тегов. Является обёрткой для PersistentDataContainer.
+ */
+public class SiTagsManager {
+    protected PersistentDataContainer container;
+
+    /**
+     * Создание нового менеджера тегов.
+     *
+     * @param container Контейнер тегов
+     */
+    public SiTagsManager(PersistentDataContainer container) {
+        this.container = container;
+    }
+
+    /**
+     * Получение контейнера тегов.
+     *
+     * @return Контейнер тегов.
+     */
+    public PersistentDataContainer getContainer() {
+        return container;
+    }
+
+    /**
+     * Установка другого контейнера тегов.
+     *
+     * @param container Контейнер тегов
+     * @return Этот же менеджер тегов.
+     */
+    public SiTagsManager setContainer(PersistentDataContainer container) {
+        this.container = container;
+        return this;
+    }
+
+    /**
+     * Проверка наличия тега в контейнере.
+     *
+     * @param tag Тег
+     * @return Наличие тега в контейнере.
+     */
+    public boolean hasTag(String tag) {
+        return container.has(SiNamespace.getKey(tag));
+    }
+
+    /**
+     * Получение контейнера данных по тегу.
+     * <p>
+     * ВАЖНО! Если тег существует, но он другого типа, то будет вызвано исключение.
+     *
+     * @param tag Имя тега
+     * @return Контейнер данных или null, если тега не существует.
+     */
+    @Nullable
+    public PersistentDataContainer getDataContainer(String tag) {
+        return container.get(SiNamespace.getKey(tag), PersistentDataType.TAG_CONTAINER);
+    }
+
+    /**
+     * Установка контейнера данных в тег.
+     *
+     * @param tag           Имя тега
+     * @param dataContainer Контейнер данных
+     * @return Этот же менеджер тегов.
+     */
+    public SiTagsManager setDataContainer(String tag, PersistentDataContainer dataContainer) {
+        container.set(SiNamespace.getKey(tag), PersistentDataType.TAG_CONTAINER, dataContainer);
+        return this;
+    }
+
+    /**
+     * Получение менеджера тегов по тегу.
+     * <p>
+     * ВАЖНО! Если тег существует, но он другого типа, то будет вызвано исключение.
+     *
+     * @param tag Имя тега
+     * @return Менеджер тегов или null, если тега не существует.
+     */
+    @Nullable
+    public SiTagsManager getTagsManager(String tag) {
+        PersistentDataContainer dataContainer = container.get(SiNamespace.getKey(tag), PersistentDataType.TAG_CONTAINER);
+        return dataContainer == null ? null : new SiTagsManager(dataContainer);
+    }
+
+    /**
+     * Установка менеджера тегов в тег.
+     *
+     * @param tag         Имя тега
+     * @param tagsManager Менеджер тегов
+     * @return Этот же менеджер тегов.
+     */
+    public SiTagsManager setTagsManager(String tag, SiTagsManager tagsManager) {
+        container.set(SiNamespace.getKey(tag), PersistentDataType.TAG_CONTAINER, tagsManager.getContainer());
+        return this;
+    }
+
+    /**
+     * Удаление тега.
+     *
+     * @param tag Тег, который будет удалён
+     * @return Этот же менеджер тегов.
+     */
+    public SiTagsManager removeTag(String tag) {
+        container.remove(SiNamespace.getKey(tag));
+        return this;
+    }
+
+    /**
+     * Установка неизвестного значения тега.
+     * <p>
+     * ВАЖНО! Поддерживаются только примитивы и строки.
+     *
+     * @param tag   Имя тега
+     * @param value Значение тега
+     * @return Этот же менеджер тегов.
+     */
+    public SiTagsManager setTag(String tag, Object value) {
+        if (value instanceof Boolean b) {
+            container.set(SiNamespace.getKey(tag), PersistentDataType.BOOLEAN, b);
+        } else if (value instanceof Byte b) {
+            container.set(SiNamespace.getKey(tag), PersistentDataType.BYTE, b);
+        } else if (value instanceof Short s) {
+            container.set(SiNamespace.getKey(tag), PersistentDataType.SHORT, s);
+        } else if (value instanceof Integer i) {
+            container.set(SiNamespace.getKey(tag), PersistentDataType.INTEGER, i);
+        } else if (value instanceof Long l) {
+            container.set(SiNamespace.getKey(tag), PersistentDataType.LONG, l);
+        } else if (value instanceof Float f) {
+            container.set(SiNamespace.getKey(tag), PersistentDataType.FLOAT, f);
+        } else if (value instanceof Double d) {
+            container.set(SiNamespace.getKey(tag), PersistentDataType.DOUBLE, d);
+        } else if (value instanceof Character c) {
+            container.set(SiNamespace.getKey(tag), PersistentDataType.STRING, String.valueOf(c));
+        } else if (value instanceof String s) {
+            container.set(SiNamespace.getKey(tag), PersistentDataType.STRING, s);
+        }
+        return this;
+    }
+
+    /**
+     * Установка неизвестных значений тегов.
+     * <p>
+     * ВАЖНО! Поддерживаются только примитивы и строки.
+     *
+     * @param tags Теги
+     * @return Этот же менеджер тегов.
+     */
+    public SiTagsManager setTags(HashMap<String, Object> tags) {
+        for (String tag : tags.keySet()) setTag(tag, tags.get(tag));
+        return this;
+    }
+    {methods}
+}

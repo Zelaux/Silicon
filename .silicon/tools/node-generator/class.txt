@@ -1,0 +1,406 @@
+package ru.vladislav117.silicon.node;
+
+import com.google.gson.*;
+import ru.vladislav117.silicon.function.SiHandlerFunction;
+import ru.vladislav117.silicon.function.SiDoubleHandlerFunction;
+import ru.vladislav117.silicon.function.SiFilterFunction;
+
+import org.jetbrains.annotations.Nullable;
+import ru.vladislav117.silicon.file.SiFile;
+import ru.vladislav117.silicon.json.SiJson;
+
+import java.util.*;
+
+/**
+ * Узел. Может быть как обычным значением (null, логическое, целочисленное, дробное, символ, строка),
+ * так и структурой (список и таблица).
+ */
+public class SiNode {
+    /**
+     * Тип узла.
+     */
+    public enum Type {
+        NULL,
+        BOOLEAN,
+        INTEGER,
+        FLOAT,
+        STRING,
+        LIST,
+        MAP
+    }
+
+    protected Type type = Type.NULL;
+    protected Double number = null;
+    protected String string = null;
+    protected ArrayList<SiNode> list = null;
+    protected HashMap<String, SiNode> map = null;
+
+    /**
+     * Создание нового узла. Принимает следующие типы данных: null, boolean, short, int,
+     * long, float, double, char, String, List<?>, Map<?, ?>.
+     *
+     * @param value Значение узла
+     */
+    public SiNode(@Nullable Object value) {
+        if (value == null) {
+            type = Type.NULL;
+        } else if (value instanceof Boolean b) {
+            type = Type.BOOLEAN;
+            number = b ? 1.0 : 0;
+        } else if (value instanceof Short s) {
+            type = Type.INTEGER;
+            number = s.doubleValue();
+        } else if (value instanceof Integer i) {
+            type = Type.INTEGER;
+            number = i.doubleValue();
+        } else if (value instanceof Long l) {
+            type = Type.INTEGER;
+            number = l.doubleValue();
+        } else if (value instanceof Float f) {
+            type = (f == f.longValue()) ? Type.INTEGER : Type.FLOAT;
+            number = f.doubleValue();
+        } else if (value instanceof Double d) {
+            type = (d == d.longValue()) ? Type.INTEGER : Type.FLOAT;
+            number = d;
+        } else if (value instanceof Character c) {
+            type = Type.STRING;
+            string = c.toString();
+        } else if (value instanceof String s) {
+            type = Type.STRING;
+            string = s;
+        } else if (value instanceof List<?> l) {
+            type = Type.LIST;
+            list = new ArrayList<>();
+            for (Object element : l) list.add(new SiNode(element));
+        } else if (value instanceof Map<?, ?> m) {
+            type = Type.MAP;
+            map = new HashMap<>();
+            for (Object key : m.keySet()) map.put(key.toString(), new SiNode(m.get(key)));
+        } else if (value instanceof SiNode n) {
+            type = n.type;
+            number = n.number;
+            string = n.string;
+            list = n.list;
+            map = n.map;
+        }
+    }
+
+    /**
+     * Создание узла с пустой таблицей.
+     *
+     * @return Узел с пустой таблицей.
+     */
+    public static SiNode emptyMap() {
+        return new SiNode(new HashMap<>());
+    }
+
+    /**
+     * Создание узла с пустым списком.
+     *
+     * @return Узел с пустым списком.
+     */
+    public static SiNode emptyList() {
+        return new SiNode(new ArrayList<>());
+    }
+
+    /**
+     * Преобразование JsonElement в узел.
+     *
+     * @param jsonElement Элемент Json
+     * @return Преобразованный узел.
+     */
+    public static SiNode parseJson(JsonElement jsonElement) {
+        if (jsonElement.isJsonPrimitive()) {
+            JsonPrimitive primitive = jsonElement.getAsJsonPrimitive();
+            if (primitive.isBoolean()) return new SiNode(primitive.getAsBoolean());
+            if (primitive.isNumber()) return new SiNode(primitive.getAsNumber().doubleValue());
+            if (primitive.isString()) return new SiNode(primitive.getAsString());
+        } else if (jsonElement.isJsonArray()) {
+            JsonArray array = jsonElement.getAsJsonArray();
+            ArrayList<SiNode> list = new ArrayList<>();
+            for (JsonElement arrayElement : array) {
+                list.add(parseJson(arrayElement));
+            }
+            return new SiNode(list);
+        } else if (jsonElement.isJsonObject()) {
+            JsonObject object = jsonElement.getAsJsonObject();
+            HashMap<String, SiNode> map = new HashMap<>();
+            for (String key : object.keySet()) {
+                map.put(key, parseJson(object.get(key)));
+            }
+            return new SiNode(map);
+        }
+        return new SiNode(null);
+    }
+
+    /**
+     * Преобразование узла в Json-элемент.
+     *
+     * @return Json-элемент из узла.
+     */
+    public JsonElement toJson() {
+        if (type == Type.NULL) return JsonNull.INSTANCE;
+        if (type == Type.BOOLEAN) return new JsonPrimitive(number != 0);
+        if (type == Type.INTEGER || type == Type.FLOAT) return new JsonPrimitive(number);
+        if (type == Type.STRING) return new JsonPrimitive(string);
+        if (type == Type.LIST) {
+            JsonArray array = new JsonArray();
+            for (SiNode element : list) array.add(element.toJson());
+            return array;
+        }
+        if (type == Type.MAP) {
+            JsonObject object = new JsonObject();
+            for (String key : map.keySet()) object.add(key, map.get(key).toJson());
+            return object;
+        }
+        return JsonNull.INSTANCE;
+    }
+
+    /**
+     * Преобразование Json-строки в узел.
+     *
+     * @param jsonString Json-строка
+     * @return Преобразованный узел.
+     */
+    public static SiNode parseJsonString(String jsonString) {
+        return parseJson(SiJson.parse(jsonString));
+    }
+
+    /**
+     * Преобразование узла в Json-строку.
+     *
+     * @return Json-строка из узла.
+     */
+    public String toJsonString() {
+        return toJson().toString();
+    }
+
+    /**
+     * Преобразование Json-файла в узел.
+     *
+     * @param jsonFile Json-файла
+     * @return Преобразованный узел.
+     */
+    public static SiNode readJson(SiFile jsonFile) {
+        return parseJson(jsonFile.readJson());
+    }
+
+    /**
+     * Запись узла в Json-файл.
+     *
+     * @param file Файл, в который будет записан узел
+     * @param file Файл, в который будет записан узел
+     * @return Этот же узел.
+     */
+    public SiNode writeJson(SiFile file) {
+        file.writeNode(this);
+        return this;
+    }
+
+    /**
+     * Получение длины строки, размера списка или размера таблицы.
+     *
+     * @return Длина строки, размер списка, размер таблицы или -1, если у узла не может быть размера.
+     */
+    public int getSize() {
+        if (type.equals(Type.STRING)) return string.length();
+        if (type.equals(Type.LIST)) return list.size();
+        if (type.equals(Type.MAP)) return map.size();
+        return -1;
+    }
+
+    /**
+     * Проверка, имеет ли узел индекс списка.
+     *
+     * @param index Индекс, который будет проверяться
+     * @return true, если индекс есть. Если узел не является списком или индекс за границами списка, то false.
+     */
+    public boolean hasIndex(int index) {
+        return type.equals(Type.LIST) && 0 <= index && index < list.size();
+    }
+
+    /**
+     * Проверка, имеет ли узел дочерний узел.
+     *
+     * @param child Имя дочернего узла
+     * @return true, если дочерний узел есть. Если узел не является таблицей или у него нет дочернего узла, то false.
+     */
+    public boolean hasChild(String child) {
+        return type.equals(Type.MAP) && map.containsKey(child);
+    }
+
+    /**
+     * Получение элемента списка.
+     *
+     * @param index Индекс элемента
+     * @return Узел списка или null, если узел не является списком или индекс за границами списка.
+     */
+    @Nullable
+    public SiNode get(int index) {
+        if (!hasIndex(index)) return null;
+        return list.get(index);
+    }
+
+    /**
+     * Получение дочернего узла.
+     *
+     * @param child Имя дочернего узла
+     * @return Дочерний узел или null, если узел не является таблицей или у него нет дочернего узла.
+     */
+    @Nullable
+    public SiNode get(String child) {
+        if (!hasChild(child)) return null;
+        return map.get(child);
+    }
+
+    /**
+     * Добавление элемента в список. Если узел не является списком, то ничего не произойдёт.
+     *
+     * @param node Элемент, который будет добавлен
+     * @return Этот же узел.
+     */
+    public SiNode add(SiNode node) {
+        if (!type.equals(Type.LIST)) return this;
+        list.add(node);
+        return this;
+    }
+
+    /**
+     * Замена элемента списка в конкретном индексе на новый. Если узел не является списком, то ничего не произойдёт.
+     * Если индекс меньше 0, то ничего не произойдёт.
+     * Если индекс больше или равен размеру списка, то элемент будет добавлен в конец списка.
+     *
+     * @param index Индекс, в который будет установлен элемент
+     * @param node  Элемент, который будет установлен
+     * @return Этот же узел.
+     */
+    public SiNode set(int index, SiNode node) {
+        if (!type.equals(Type.LIST)) return this;
+        if (index < 0) return this;
+        if (index < list.size()) {
+            list.set(index, node);
+        } else {
+            list.add(node);
+        }
+        return this;
+    }
+
+    /**
+     * Вставка элемента списка в конкретный индекс со сдвигом элементов справа.
+     * Если узел не является списком, то ничего не произойдёт.
+     * Если индекс меньше 0, то ничего не произойдёт.
+     * Если индекс больше или равен размеру списка, то элемент будет добавлен в конец списка.
+     *
+     * @param index Индекс, в который будет вставлен элемент
+     * @param node  Элемент, который будет вставлен
+     */
+    public SiNode insert(int index, SiNode node) {
+        if (!type.equals(Type.LIST)) return this;
+        if (index < 0) return this;
+        if (index < list.size()) {
+            list.add(index, node);
+        } else {
+            list.add(node);
+        }
+        return this;
+    }
+
+    /**
+     * Установка дочернего узла с заданным именем. Если узел не является таблицей, то ничего не произойдёт.
+     *
+     * @param child Имя дочернего узла
+     * @param node  Дочерний узел
+     * @return Этот же узел.
+     */
+    public SiNode set(String child, SiNode node) {
+        if (!type.equals(Type.MAP)) return this;
+        map.put(child, node);
+        return this;
+    }
+
+    /**
+     * Удаление элемента списка из конкретного индекса.
+     * Если узел не является списком, то ничего не произойдёт.
+     * Если индекс за границей списка, то ничего не произойдёт.
+     *
+     * @param index Индекс, элемент по которому будет удалён
+     * @return Этот же узел.
+     */
+    public SiNode remove(int index) {
+        if (!hasIndex(index)) return this;
+        list.remove(index);
+        return this;
+    }
+
+    /**
+     * Удаление элементов списка по фильтру.
+     * Если узел не является списком, то ничего не произойдёт.
+     *
+     * @param filter Фильтр элементов
+     * @return Этот же узел.
+     */
+    public SiNode removeIf(SiFilterFunction<? super SiNode> filter) {
+        if (!type.equals(Type.LIST)) return this;
+        list.removeIf(filter::isSuitable);
+        return this;
+    }
+
+    /**
+     * Удаление дочернего узла с заданным именем. Если узел не является таблицей, то ничего не произойдёт.
+     * Ели дочернего узла с таким именем нет, то ничего не произойдёт.
+     *
+     * @param child Имя дочернего узла
+     * @return Этот же узел.
+     */
+    public SiNode remove(String child) {
+        if (!hasChild(child)) return this;
+        map.remove(child);
+        return this;
+    }
+
+    /**
+     * Получение множества имён дочерних узлов.
+     *
+     * @return Множество дочерних узлов или пустое множество, если узел не является таблицей.
+     */
+    public Set<String> getKeySet() {
+        if (!type.equals(Type.MAP)) return new HashSet<>();
+        return map.keySet();
+    }
+
+    /**
+     * Обработка каждого дочернего узла в списке.
+     *
+     * @param handler Обработчик узлов
+     * @return Этот же узел.
+     */
+    public SiNode forEach(SiHandlerFunction<SiNode> handler) {
+        if (type.equals(Type.LIST)) list.forEach(handler::handle);
+        return this;
+    }
+
+    /**
+     * Обработка каждого дочернего узла в таблице.
+     *
+     * @param handler Обработчик узлов
+     * @return Этот же узел.
+     */
+    public SiNode forEach(SiDoubleHandlerFunction<String, SiNode> handler) {
+        if (type.equals(Type.MAP)) map.forEach(handler::handle);
+        return this;
+    }
+
+    @Override
+    public String toString() {
+        if (type == Type.NULL) return "null";
+        if (type == Type.BOOLEAN) return number != 0 ? "true" : "false";
+        if (type == Type.INTEGER) return String.valueOf(number.longValue());
+        if (type == Type.FLOAT) return String.valueOf(number.doubleValue());
+        if (type == Type.STRING) return string;
+        if (type == Type.LIST) return list.toString();
+        if (type == Type.MAP) return map.toString();
+        return "unknown";
+    }
+
+    {methods}
+}

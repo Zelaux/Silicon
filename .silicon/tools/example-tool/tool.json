@@ -1,0 +1,10 @@
+{
+    "__comment__": "Это шаблонный пример инструмента. Обязательными являются поля \"name\" и \"run\".",
+    "name": "example-tool",
+    "aliases": ["example"],
+    "description": "Шаблон-пустышка, ничего не делает.",
+    "run": {
+        "type": "python-script",
+        "file": "tool.py"
+    }
+}

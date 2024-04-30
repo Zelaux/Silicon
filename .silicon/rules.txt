@@ -1,0 +1,63 @@
+// ## Стиль написания классов:
+
+class Klass {
+    // Публичные константы
+    public static final int PUBLIC_CONST = 0;
+
+    // Приватные константы
+    static final int PRIVATE_CONST = 0;
+
+    // Переменные (поля) класса
+    public int publicField;
+    protected int protectedField;
+    int privateField;
+
+    // Конструктор с аргументами
+    public Klass(args...) {
+    }
+
+    // Копирующий конструктор
+    public Klass(Klass klass) {
+    }
+
+    // Метод clone
+    public Klass clone() {
+    }
+
+    // Конструктор без аргументов
+    public Klass() {
+    }
+
+    // Статический "конструктор"
+    public static Klass create(){
+    }
+
+    // Геттеры
+    public int getField() {
+    }
+
+    // Сеттеры
+    public Klass setField(value) {
+    }
+
+    // Методы
+    public void doSomething() {
+    }
+
+    // Трансформации
+    public String toString() {
+    }
+
+    public Klass2 toKlass2() {
+    }
+}
+// // В некоторых случаях стоит отходить от данных правил
+
+// ## Стиль написания документации:
+
+// * После каждой строки описания должна стоять точка, или иной знак препинания, обозначающий конец предложения;
+// * После каждого @return должна стоять точка;
+// * После каждого @param не должна стоять точка или иной знак препинания, обозначающий конец предложения или конструкции;
+// * @Override должен находиться над всеми аннотациями
+// * @Nullable должен ставиться везде, где есть вероятность получить null
+// * Названия классов, примитивов должны быть в конструкции {@code <текст>}. Пример: {@code boolean}, {@code null}

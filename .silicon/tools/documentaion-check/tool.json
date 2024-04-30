@@ -1,0 +1,9 @@
+{
+    "name": "documentation-check",
+    "aliases": ["doc-check", "doc"],
+    "description": "Проверка написания документации.",
+    "run": {
+        "type": "python-script",
+        "file": "tool.py"
+    }
+}

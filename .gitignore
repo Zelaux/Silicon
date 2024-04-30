@@ -1,0 +1,11 @@
+# IDE
+.idea/
+
+# Build
+.gradle/
+build/
+
+# Workspace
+.test/
+.silicon/tools/tools-cache.json
+build-and-upload-config.json

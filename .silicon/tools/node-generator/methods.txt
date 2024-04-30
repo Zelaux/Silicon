@@ -1,0 +1,159 @@
+
+/**
+ * Проверяет, является ли этот узел {full_name}.
+ *
+ * @return true, если узел является {full_name}, иначе false.
+ */
+public boolean is{full_name}() {
+    {is_code}
+}
+
+/**
+ * Проверяет, является ли узел по индексу {full_name}.
+ *
+ * @param index Индекс узла списка
+ * @return true, если узел по индексу является {full_name}.false если не является, или если индекс за границей списка, или если узел не является списком.
+ */
+public boolean is{full_name}(int index) {
+    return hasIndex(index) && get(index).is{full_name}();
+}
+
+/**
+ * Проверяет, является ли дочерний узел {full_name}.
+ *
+ * @param child Имя дочернего узла
+ * @return true, если дочерний узел является {full_name}.false если не является, или если дочернего узла с таким именем нет, или если узел не является таблицей.
+ */
+public boolean is{full_name}(String child) {
+    return hasChild(child) && get(child).is{full_name}();
+}
+
+/**
+ * Преобразует узел к {primitive_name}.
+ * <p>
+ * ВАЖНО! Если узел другого типа, то может возникнуть ошибка!
+ *
+ * @return {primitive_name} значение узла.
+ */
+public {primitive_name} as{full_name}() {
+    {as_code}
+}
+
+/**
+ * Получение {class_name} значения узла из списка.
+ *
+ * @param index Индекс узла в списке
+ * @return {class_name} значение или null, если узел другого типа, или если индекс за границей списка, или если узел не является списком.
+ */
+@Nullable
+public {class_name} get{full_name}(int index) {
+    SiNode node = get(index);
+    if (node == null) return null;
+    if (!node.is{full_name}()) return null;
+    return node.as{full_name}();
+}
+
+/**
+ * Получение {class_name} значения узла из списка.
+ *
+ * @param index Индекс узла в списке
+ * @param defaultValue Значение по умолчанию
+ * @return {class_name} значение или значение по умолчанию, если узел другого типа, или если индекс за границей списка, или если узел не является списком.
+ */
+public {primitive_name} get{full_name}(int index, {primitive_name} defaultValue) {
+    SiNode node = get(index);
+    if (node == null) return defaultValue;
+    if (!node.is{full_name}()) return defaultValue;
+    return node.as{full_name}();
+}
+
+/**
+ * Получение {class_name} значения дочернего узла.
+ *
+ * @param child Имя дочернего узла
+ * @return {class_name} значение или null, если дочерний узел другого типа, или если дочернего узла с таким именем нет, или если узел не является таблицей.
+ */
+@Nullable
+public {class_name} get{full_name}(String child) {
+    SiNode node = get(child);
+    if (node == null) return null;
+    if (!node.is{full_name}()) return null;
+    return node.as{full_name}();
+}
+
+/**
+ * Получение {class_name} значения дочернего узла.
+ *
+ * @param child        Имя дочернего узла
+ * @param defaultValue Значение по умолчанию
+ * @return {class_name} значение или значение по умолчанию, если дочерний узел другого типа, или если дочернего узла с таким именем нет, или если узел не является таблицей.
+ */
+public {primitive_name} get{full_name}(String child, {primitive_name} defaultValue) {
+    SiNode node = get(child);
+    if (node == null) return defaultValue;
+    if (!node.is{full_name}()) return defaultValue;
+    return node.as{full_name}();
+}
+
+/**
+ * Установка {primitive_name} значения в узел.
+ *
+ * @param value {primitive_name} значение
+ * @return Этот же узел.
+ */
+public SiNode set{full_name}({primitive_name} value) {
+    {set_code}
+    return this;
+}
+
+/**
+ * Замена элемента списка в конкретном индексе на новый с {primitive_name} значением. Если узел не является списком, то ничего не произойдёт.
+ * Если индекс меньше 0, то ничего не произойдёт.
+ * Если индекс больше или равен размеру списка, то элемент будет добавлен в конец списка.
+ *
+ * @param index Индекс, в который будет установлен элемент
+ * @param value  Элемент, который будет установлен
+ * @return Этот же узел.
+ */
+public SiNode set{full_name}(int index, {primitive_name} value) {
+    set(index, new SiNode(value));
+    return this;
+}
+
+/**
+ * Вставка {primitive_name} элемента списка в конкретный индекс со сдвигом элементов справа.
+ * Если узел не является списком, то ничего не произойдёт.
+ * Если индекс меньше 0, то ничего не произойдёт.
+ * Если индекс больше или равен размеру списка, то элемент будет добавлен в конец списка.
+ *
+ * @param index Индекс, в который будет вставлен элемент
+ * @param value Элемент, который будет вставлен
+ * @return Этот же узел.
+ */
+public SiNode insert{full_name}(int index, {primitive_name} value) {
+    insert(index, new SiNode(value));
+    return this;
+}
+
+/**
+ * Добавление {primitive_name} элемента в список. Если узел не является списком, то ничего не произойдёт.
+ *
+ * @param value Элемент, который будет добавлен
+ * @return Этот же узел.
+ */
+public SiNode add{full_name}({primitive_name} value) {
+    add(new SiNode(value));
+    return this;
+}
+
+/**
+ * Установка дочернего узла с заданным именем. Если узел не является таблицей, то ничего не произойдёт.
+ *
+ * @param child Имя дочернего узла
+ * @param value {primitive_name} значение узла
+ * @return Этот же узел.
+ */
+public SiNode set{full_name}(String child, {primitive_name} value) {
+    set(child, new SiNode(value));
+    return this;
+}

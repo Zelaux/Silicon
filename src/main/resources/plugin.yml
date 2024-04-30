@@ -1,0 +1,10 @@
+name: Silicon
+version: '${version}'
+main: ru.vladislav117.silicon.SiliconPlugin
+api-version: '1.20'
+prefix: Silicon
+load: STARTUP
+softdepend: [Vault, WorldEdit, WorldGuard, CoreProtect]
+authors: [Vladislav117]
+description: Мощный фреймворк для создания плагинов с импровизацией кастомного контента
+website: https://github.com/Vladislav117/Silicon

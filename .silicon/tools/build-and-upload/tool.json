@@ -1,0 +1,11 @@
+{
+    "name": "build-and-upload",
+    "aliases": [
+        "buildandupload", "bau", "bu"
+    ],
+    "description": "Остановка сервера и обновление плагина.",
+    "run": {
+        "type": "python-script",
+        "file": "tool.py"
+    }
+}

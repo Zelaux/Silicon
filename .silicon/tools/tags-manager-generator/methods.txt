@@ -1,0 +1,38 @@
+
+/**
+ * Получение {class_name} значения тега.
+ * <p>
+ * ВАЖНО! Если тег существует, но он другого типа, то будет вызвано исключение.
+ *
+ * @param tag Имя тега
+ * @return Значение тега или null, если тега не существует.
+ */
+@Nullable
+public {class_name} get{full_name}(String tag) {
+    return container.get(SiNamespace.getKey(tag), PersistentDataType.{type_name});
+}
+
+/**
+ * Получение {primitive_name} значения тега.
+ * <p>
+ * ВАЖНО! Если тег существует, но он другого типа, то будет вызвано исключение.
+ *
+ * @param tag          Имя тега
+ * @param defaultValue Значение по умолчанию
+ * @return Значение тега или значение по умолчанию, если тега не существует.
+ */
+public {primitive_name} get{full_name}(String tag, {primitive_name} defaultValue) {
+    return container.getOrDefault(SiNamespace.getKey(tag), PersistentDataType.{type_name}, defaultValue);
+}
+
+/**
+ * Установка {primitive_name} значения тега.
+ *
+ * @param tag   Имя тега
+ * @param value {primitive_name} значение тега
+ * @return Этот же менеджер тегов.
+ */
+public SiTagsManager set{full_name}(String tag, {primitive_name} value) {
+    container.set(SiNamespace.getKey(tag), PersistentDataType.{type_name}, value);
+    return this;
+}
