@@ -6,13 +6,11 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.vladislav117.silicon.world.SiWorld;
 import ru.vladislav117.silicon.world.SiWorlds;
-import ru.vladislav117.tellurium.TeSilicon;
 
 public final class SiliconPlugin extends JavaPlugin {
     @Override
     public void onEnable() {
         Silicon.init(this);
-        if (true) TeSilicon.init();
     }
 
     @Override
