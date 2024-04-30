@@ -3,7 +3,7 @@ plugins {
     id 'maven-publish'
 }
 
-group = 'ru.vladislav117'
+group = 'ru.vladislav117.silicon'
 version = '0'
 
 repositories {
@@ -68,14 +68,10 @@ jar {
     }
 }
 
-afterEvaluate {
-    publishing {
-        publications {
-            release(MavenPublication) {
-                groupId = 'ru.vladislav117'
-                artifactId = 'silicon'
-                version = '0'
-            }
+publishing {
+    publications {
+        maven(MavenPublication) {
+            from components.java
         }
     }
 }
