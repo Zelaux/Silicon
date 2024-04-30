@@ -74,7 +74,7 @@ afterEvaluate {
             release(MavenPublication) {
                 groupId = 'ru.vladislav117'
                 artifactId = 'silicon'
-                version = '1.0'
+                version = '0'
             }
         }
     }
