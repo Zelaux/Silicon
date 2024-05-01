@@ -10,6 +10,7 @@ import ru.vladislav117.silicon.item.SiItemType;
 import ru.vladislav117.silicon.text.SiText;
 import ru.vladislav117.silicon.text.SiTextLike;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 
 /**
@@ -20,7 +21,7 @@ public class SiItemCategory extends SiContent {
     protected SiColor color;
     protected ItemStack itemStack = new ItemStack(Material.PAPER);
     protected boolean displays = true;
-    protected HashSet<SiItemType> itemTypes = new HashSet<>();
+    protected ArrayList<SiItemType> itemTypes = new ArrayList<>();
 
     /**
      * Создание новой категории.
@@ -132,7 +133,7 @@ public class SiItemCategory extends SiContent {
      *
      * @return Предметы категории.
      */
-    public HashSet<SiItemType> getItemTypes() {
+    public ArrayList<SiItemType> getItemTypes() {
         return itemTypes;
     }
 
@@ -143,7 +144,7 @@ public class SiItemCategory extends SiContent {
      * @return Эта же категория.
      */
     public SiItemCategory addItemType(SiItemType itemType) {
-        itemTypes.add(itemType);
+        if (!itemTypes.contains(itemType)) itemTypes.add(itemType);
         return this;
     }
 }

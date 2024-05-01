@@ -45,7 +45,9 @@ public final class SiItemTypes {
      */
     public static void init() {
         loaders.addPrimaryLoader(() -> {
-            unknown = new SiItemType("unknown", Material.COAL);
+            unknown = new SiItemType("unknown", Material.COAL) {{
+                display = new SiItemDisplay.StaticDisplay("Неизвестный предмет", "Служебный предмет");
+            }};
         });
 
         loaders.addSecondaryLoader(() -> {

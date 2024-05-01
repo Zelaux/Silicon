@@ -10,7 +10,7 @@ import ru.vladislav117.silicon.text.pattern.SiTextPattern;
 public class SiFeaturePattern implements SiTextPattern {
     protected SiTextLike feature;
     protected SiTextLike value;
-    protected SiFeaturePatternStyle style = SiFeaturePatternStyles.Colon.white;
+    protected SiFeaturePatternStyle style = SiFeaturePatternStyles.Colon.greenYellow;
 
     /**
      * Создание шаблона "свойство".
