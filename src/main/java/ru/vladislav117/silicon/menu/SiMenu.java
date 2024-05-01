@@ -24,7 +24,7 @@ public class SiMenu {
     protected int size;
     protected SiTextLike displayName = SiText.string("");
     protected HashMap<Integer, SiMenuElement> elements = new HashMap<>();
-    protected SiMenuElement plugElement = new SiMenuElement().setItemStack(Material.LIGHT_GRAY_STAINED_GLASS_PANE).setDisplayName(SiText.string(""));
+    protected SiMenuElement plugElement = new SiMenuElement().setItemStack(Material.GRAY_STAINED_GLASS_PANE).setDisplayName(SiText.string(""));
 
     /**
      * Создание нового меню

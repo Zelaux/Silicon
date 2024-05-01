@@ -6,6 +6,10 @@ import org.bukkit.inventory.RecipeChoice;
 import org.jetbrains.annotations.Nullable;
 import ru.vladislav117.silicon.item.SiItemStack;
 import ru.vladislav117.silicon.item.SiItemType;
+import ru.vladislav117.silicon.item.category.SiItemCategory;
+import ru.vladislav117.silicon.menu.SiMenu;
+import ru.vladislav117.silicon.text.SiText;
+import ru.vladislav117.silicon.text.structure.SiLinedText;
 
 /**
  * Абстрактный крафт.
@@ -136,5 +140,22 @@ public abstract class SiCraft {
      */
     public SiCraft addIngredient(RecipeChoice recipeChoice) {
         return addIngredient(SiCraftIngredient.buildFromRecipeChoice(recipeChoice));
+    }
+
+    public abstract SiItemStack buildIcon();
+
+    public abstract SiMenu buildMenu(String name);
+
+    protected void buildStandardButtons(SiMenu menu, SiItemStack result) {
+        menu.setElement(45, SiCrafts.allCategories.buildMenuElement(menu.getName() + "_category_crafts").setDisplayName(SiText.string("Все категории")).setClickHandler((player, itemStack, event) -> {
+            SiCraftMenus.getCategoriesMenu().open(player);
+        }));
+        int categoryIndex = 0;
+        for (SiItemCategory category : result.getItemType().getCategories()) {
+            menu.setElement(46 + categoryIndex, SiCraftMenus.buildElementForCategory(category));
+            categoryIndex++;
+            if (categoryIndex >= 53) break;
+        }
+        menu.setElement(53, SiCrafts.infoCrafts.buildMenuElement().setDescription(new SiLinedText("Не знаете как скрафтить какой-либо из предметов? Нажмите на него, и вы увидите рецепты для этого предмета.").getCompleteTextParts()));
     }
 }

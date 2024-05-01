@@ -373,7 +373,7 @@ public class SiItemStack {
     public SiItemStack updateDisplay() {
         SiItemType itemType = getItemType();
         if (itemType.isUnknown()) return this;
-        List<SiTextLike> description = itemType.getDisplay() == null ? new ArrayList<>() : itemType.getDisplay().getDescription(this);
+        List<SiTextLike> description = itemType.getDisplay() == null ? new ArrayList<>() : new ArrayList<>(itemType.getDisplay().getDescription(this));
         if (itemType.getMainCategory().isDisplays()){
             description.add(0, itemType.getMainCategory().getDisplayNameForItemDescription());
         }

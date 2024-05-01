@@ -8,6 +8,7 @@ import ru.vladislav117.silicon.color.SiPalette;
 import ru.vladislav117.silicon.command.SiCommand;
 import ru.vladislav117.silicon.command.tabCompleteArgumentHandlers.SiIntegerTabCompleteArgumentHandler;
 import ru.vladislav117.silicon.command.tabCompleteArgumentHandlers.SiOnlinePlayersTabCompleteArgumentHandler;
+import ru.vladislav117.silicon.craft.SiCraftMenus;
 import ru.vladislav117.silicon.economy.SiCurrencies;
 import ru.vladislav117.silicon.economy.SiCurrency;
 import ru.vladislav117.silicon.effect.SiEffectType;
@@ -37,6 +38,15 @@ public class SiliconCommands {
      * Инициализировать команды фреймворка.
      */
     public static void init() {
+        new SiCommand("crafts", List.of("recipes"), new SiCommand.Handler((sender, commandLabel, args) -> {
+            if (!(sender instanceof Player player)) {
+                SiText.string("Команду может отправлять только игрок", SiPalette.Interface.red).toMessageTask().addOtherReceiver(sender).send();
+                return false;
+            }
+            SiCraftMenus.getCategoriesMenu().open(player);
+            return true;
+        }));
+
         new SiCommand("tpworld", List.of("worldtp", "tpw", "wtp"), "admin", new SiCommand.Handler((sender, commandLabel, args) -> {
             if (args.length == 0) {
                 SiText.string("Не указан игрок!", SiPalette.Interface.red).toMessageTask().addOtherReceiver(sender).send();

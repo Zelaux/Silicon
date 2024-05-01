@@ -7,9 +7,16 @@ import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.SmithingTransformRecipe;
 import ru.vladislav117.silicon.craft.SiCraft;
 import ru.vladislav117.silicon.craft.SiCraftIngredient;
+import ru.vladislav117.silicon.craft.SiCraftMenus;
+import ru.vladislav117.silicon.craft.SiCrafts;
 import ru.vladislav117.silicon.item.SiItemStack;
 import ru.vladislav117.silicon.item.SiItemType;
+import ru.vladislav117.silicon.menu.SiMenu;
+import ru.vladislav117.silicon.menu.SiMenuElement;
 import ru.vladislav117.silicon.namespace.SiNamespace;
+import ru.vladislav117.silicon.text.SiText;
+import ru.vladislav117.silicon.text.SiTextComponent;
+import ru.vladislav117.silicon.text.structure.SiLinedText;
 
 /**
  * Крафт преобразования предмета на кузнечном столе.
@@ -340,5 +347,27 @@ public class SiSmithingTransformCraft extends SiRecipeCraft {
     @Override
     public Recipe buildRecipe(String name) {
         return new SmithingTransformRecipe(SiNamespace.getKey(name), result, template.getRecipeChoice(), base.getRecipeChoice(), addition.getRecipeChoice(), saveNbt);
+    }
+
+    @Override
+    public SiItemStack buildIcon() {
+        return new SiItemStack(Material.SMITHING_TABLE){{
+            setDescription(new SiLinedText("Предмет получается путём создания на столе кузнеца").getCompleteTextParts());
+        }};
+    }
+
+    @Override
+    public SiMenu buildMenu(String name) {
+        return new SiMenu(name, SiMenu.row6size, new SiTextComponent(result.displayName())) {{
+            setElement(19, SiCraftMenus.buildIngredientElement(template));
+            setElement(20, SiCraftMenus.buildIngredientElement(base));
+            setElement(21, SiCraftMenus.buildIngredientElement(addition));
+            setElement(22, SiCrafts.rightArrowIcon.buildMenuElement().setDisplayName(SiText.string("")));
+            setElement(23, new SiMenuElement().setItemStack(buildIcon()));
+            setElement(24, SiCrafts.rightArrowIcon.buildMenuElement().setDisplayName(SiText.string("")));
+            setElement(25, SiCraftMenus.buildIngredientElement(new SiItemStack(result)));
+
+            buildStandardButtons(this, new SiItemStack(result));
+        }};
     }
 }

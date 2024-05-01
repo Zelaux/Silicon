@@ -7,9 +7,16 @@ import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.ShapedRecipe;
 import ru.vladislav117.silicon.craft.SiCraft;
 import ru.vladislav117.silicon.craft.SiCraftIngredient;
+import ru.vladislav117.silicon.craft.SiCraftMenus;
+import ru.vladislav117.silicon.craft.SiCrafts;
 import ru.vladislav117.silicon.item.SiItemStack;
 import ru.vladislav117.silicon.item.SiItemType;
+import ru.vladislav117.silicon.menu.SiMenu;
+import ru.vladislav117.silicon.menu.SiMenuElement;
 import ru.vladislav117.silicon.namespace.SiNamespace;
+import ru.vladislav117.silicon.text.SiText;
+import ru.vladislav117.silicon.text.SiTextComponent;
+import ru.vladislav117.silicon.text.structure.SiLinedText;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -155,5 +162,69 @@ public class SiShapedCraft extends SiRecipeCraft {
             recipe.setIngredient(character, ingredients.get(character).getRecipeChoice());
         }
         return recipe;
+    }
+
+    @Override
+    public SiItemStack buildIcon() {
+        return new SiItemStack(Material.CRAFTING_TABLE) {{
+            setDescription(new SiLinedText("Предмет получается путём крафта на верстаке").getCompleteTextParts());
+        }};
+    }
+
+    @Override
+    public SiMenu buildMenu(String name) {
+        return new SiMenu(name, SiMenu.row6size, new SiTextComponent(result.displayName())) {{
+            for (int row : new int[]{10, 19, 28}) {
+                for (int i = 0; i < 3; i++) {
+                    setElement(row + i, new SiMenuElement() {{
+                        setItemStack(Material.LIGHT_GRAY_STAINED_GLASS_PANE);
+                        setDisplayName(SiText.string(""));
+                    }});
+                }
+            }
+            if (shape.size() >= 1) {
+                int charIndex = 0;
+                for (Character character : shape.get(0).toCharArray()) {
+                    SiCraftIngredient ingredient = ingredients.get(character);
+                    if (character.equals(' ') || ingredient == null) {
+                        charIndex++;
+                        continue;
+                    }
+                    setElement(10 + charIndex, SiCraftMenus.buildIngredientElement(ingredient));
+                    charIndex++;
+                }
+            }
+            if (shape.size() >= 2) {
+                int charIndex = 0;
+                for (Character character : shape.get(1).toCharArray()) {
+                    SiCraftIngredient ingredient = ingredients.get(character);
+                    if (character.equals(' ') || ingredient == null) {
+                        charIndex++;
+                        continue;
+                    }
+                    setElement(19 + charIndex, SiCraftMenus.buildIngredientElement(ingredient));
+                    charIndex++;
+                }
+            }
+            if (shape.size() >= 3) {
+                int charIndex = 0;
+                for (Character character : shape.get(2).toCharArray()) {
+                    SiCraftIngredient ingredient = ingredients.get(character);
+                    if (character.equals(' ') || ingredient == null) {
+                        charIndex++;
+                        continue;
+                    }
+                    setElement(28 + charIndex, SiCraftMenus.buildIngredientElement(ingredient));
+                    charIndex++;
+                }
+            }
+
+            setElement(22, SiCrafts.rightArrowIcon.buildMenuElement().setDisplayName(SiText.string("")));
+            setElement(23, new SiMenuElement().setItemStack(buildIcon()));
+            setElement(24, SiCrafts.rightArrowIcon.buildMenuElement().setDisplayName(SiText.string("")));
+            setElement(25, SiCraftMenus.buildIngredientElement(new SiItemStack(result)));
+
+            buildStandardButtons(this, new SiItemStack(result));
+        }};
     }
 }

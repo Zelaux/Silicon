@@ -81,4 +81,8 @@ public final class SiMenus {
     public static SiMenu buildMenuCluster(String name, ArrayList<SiMenuElement> elements) {
         return buildMenuCluster(name, SiText.string(""), elements);
     }
+
+    public static SiMenu buildFancyMenu(String name, ArrayList<SiMenuElement> elements) {
+        return buildMenuCluster(name, elements);
+    }
 }

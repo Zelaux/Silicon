@@ -6,6 +6,7 @@ import ru.vladislav117.silicon.area.SiAreaTypes;
 import ru.vladislav117.silicon.area.SiAreas;
 import ru.vladislav117.silicon.block.SiBlocks;
 import ru.vladislav117.silicon.chat.SiChat;
+import ru.vladislav117.silicon.craft.SiCraftMenus;
 import ru.vladislav117.silicon.craft.SiCrafts;
 import ru.vladislav117.silicon.cusomModelData.SiCustomModelDataRegistry;
 import ru.vladislav117.silicon.displayEntity.SiDisplayEntities;
@@ -145,6 +146,7 @@ public final class Silicon {
         SiMaterialsReplacers.init();
         SiBlocks.init();
         SiCrafts.init();
+        SiCraftMenus.init();
         SiDisplayEntityTypes.init();
         SiDisplayEntities.init();
         SiBulletTypes.init();

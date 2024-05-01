@@ -7,8 +7,13 @@ import ru.vladislav117.silicon.craft.minecraft.*;
 import ru.vladislav117.silicon.event.SiBuiltinEvents;
 import ru.vladislav117.silicon.event.SiEvents;
 import ru.vladislav117.silicon.function.SiConverterFunction;
+import ru.vladislav117.silicon.icon.SiIcon;
+import ru.vladislav117.silicon.icon.SiIcons;
 import ru.vladislav117.silicon.item.SiItemStack;
 import ru.vladislav117.silicon.item.SiItemType;
+import ru.vladislav117.silicon.menu.SiMenu;
+import ru.vladislav117.silicon.menu.SiMenuElement;
+import ru.vladislav117.silicon.menu.SiMenus;
 import ru.vladislav117.silicon.utils.ClassUtils;
 
 import java.util.*;
@@ -21,6 +26,8 @@ public class SiCrafts {
     static ArrayList<SiCraft> crafts = new ArrayList<>();
     static HashMap<Material, ArrayList<SiCraft>> craftsByMaterials = new HashMap<>();
     static HashMap<SiItemType, ArrayList<SiCraft>> craftsByItemTypes = new HashMap<>();
+
+    public static SiIcon rightArrowIcon, allCategories, infoCrafts;
 
     /**
      * Добавить крафт в список по материалам.
@@ -65,6 +72,17 @@ public class SiCrafts {
     }
 
     /**
+     * Получение всех крафтов предмета.
+     *
+     * @param itemStack Предмет
+     * @return Список крафтов
+     */
+    public static ArrayList<SiCraft> getCraftsFor(SiItemStack itemStack) {
+        if (itemStack.getItemType().isUnknown()) return  craftsByMaterials.getOrDefault(itemStack.getMaterial(), new ArrayList<>(0));
+        return craftsByItemTypes.getOrDefault(itemStack.getItemType(), new ArrayList<>(0));
+    }
+
+    /**
      * Добавить крафт.
      *
      * @param craft Крафт
@@ -100,6 +118,12 @@ public class SiCrafts {
      */
     public static void init() {
         CraftNameSystem.init();
+
+        SiIcons.loaders.addPrimaryLoader(() -> {
+            rightArrowIcon = new SiIcon("crafts_right_arrow");
+            allCategories = new SiIcon("all_categories");
+            infoCrafts = new SiIcon("info_crafts");
+        });
 
         SiEvents.addHandler(SiBuiltinEvents.SecondaryLoadEndEvent.class, event -> {
             Iterator<Recipe> iterator = Bukkit.recipeIterator();

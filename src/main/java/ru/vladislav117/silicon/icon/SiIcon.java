@@ -5,6 +5,7 @@ import ru.vladislav117.silicon.content.SiContent;
 import ru.vladislav117.silicon.cusomModelData.SiCustomModelDataRecord;
 import ru.vladislav117.silicon.item.SiItemStack;
 import ru.vladislav117.silicon.menu.SiMenuElement;
+import ru.vladislav117.silicon.text.SiText;
 
 /**
  * Иконка.
@@ -50,7 +51,7 @@ public class SiIcon extends SiContent {
      * @return Элемент меню.
      */
     public SiMenuElement buildMenuElement(String name) {
-        return new SiMenuElement(name).setItemStack(buildItemStack());
+        return new SiMenuElement(name).setItemStack(buildItemStack()).setDisplayName(SiText.string(""));
     }
 
     /**
@@ -59,6 +60,6 @@ public class SiIcon extends SiContent {
      * @return Элемент меню.
      */
     public SiMenuElement buildMenuElement() {
-        return new SiMenuElement().setItemStack(buildItemStack());
+        return new SiMenuElement().setItemStack(buildItemStack()).setDisplayName(SiText.string(""));
     }
 }
