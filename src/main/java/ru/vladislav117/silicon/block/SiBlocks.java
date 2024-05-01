@@ -9,6 +9,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
+import ru.vladislav117.silicon.Silicon;
 import ru.vladislav117.silicon.event.SiEvents;
 import ru.vladislav117.silicon.log.SiLog;
 import ru.vladislav117.silicon.materialReplacer.SiMaterialReplacerItemType;
@@ -115,6 +116,7 @@ public final class SiBlocks {
 
             @EventHandler
             public void onChunkLoadEvent(ChunkLoadEvent event) {
+                if (!Silicon.isServerLoaded()) return;
                 chunksRecords.loadChunk(event.getChunk());
             }
         });
