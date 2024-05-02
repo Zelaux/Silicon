@@ -138,18 +138,19 @@ public class SiInventoryManager {
             ItemStack slotItem = inventory.getItem(slotIndex);
             if (SiComparator.isAir(slotItem)) continue;
             if (!filter.isSuitable(slotItem)) continue;
-            int remainingAmount = Math.max(0, slotItem.getAmount() - (amount - removedAmount));
+            int leftToRemove = amount - removedAmount;
+            int remainingAmount = Math.max(0, slotItem.getAmount() - leftToRemove);
             if (remainingAmount == 0) {
                 removedAmount += slotItem.getAmount();
                 removed.add(slotItem.clone());
                 inventory.setItem(slotIndex, new ItemStack(Material.AIR));
                 continue;
             }
-            removedAmount += amount - removedAmount;
+            removedAmount += leftToRemove;
             ItemStack removedItem = slotItem.clone();
-            removedItem.setAmount(amount - removedAmount);
+            removedItem.setAmount(leftToRemove);
             removed.add(removedItem);
-            slotItem.setAmount(remainingAmount);
+            slotItem.setAmount(slotItem.getAmount() - leftToRemove);
             inventory.setItem(slotIndex, slotItem);
         }
         return removed;
