@@ -10,6 +10,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
 import ru.vladislav117.silicon.Silicon;
+import ru.vladislav117.silicon.event.SiBuiltinEvents;
 import ru.vladislav117.silicon.event.SiEvents;
 import ru.vladislav117.silicon.log.SiLog;
 import ru.vladislav117.silicon.materialReplacer.SiMaterialReplacerItemType;
@@ -25,6 +26,7 @@ import java.util.HashMap;
  */
 public final class SiBlocks {
     static ChunksRecords chunksRecords = new ChunksRecords();
+    static ArrayList<Location> chunksQueue = new ArrayList<>();
 
     /**
      * Создание ключа чанка.
@@ -94,6 +96,12 @@ public final class SiBlocks {
      * Инициализация.
      */
     public static void init() {
+        SiEvents.addHandler(SiBuiltinEvents.ServerLoadEvent.class, event -> {
+            for (Location location : chunksQueue) {
+                chunksRecords.loadChunk(location.getChunk());
+            }
+        });
+
         SiEvents.registerBukkitEvents(new Listener() {
             @EventHandler
             public void onBlockPlaceEvent(BlockPlaceEvent event) {
@@ -116,7 +124,11 @@ public final class SiBlocks {
 
             @EventHandler
             public void onChunkLoadEvent(ChunkLoadEvent event) {
-                if (!Silicon.isServerLoaded()) return;
+                if (!Silicon.isServerLoaded()) {
+                    Location location = event.getChunk().getBlock(0, 0, 0).getLocation();
+                    if (!chunksQueue.contains(location)) chunksQueue.add(location);
+                    return;
+                }
                 chunksRecords.loadChunk(event.getChunk());
             }
         });
@@ -257,7 +269,9 @@ public final class SiBlocks {
          * @param location Позиция блока
          */
         public void addBlock(SiBlockItemType type, Location location) {
-            chunks.get(buildChunkKey(location)).addBlock(type, location);
+            String chunkKey = buildChunkKey(location);
+            // if (!chunks.containsKey(chunkKey)) loadChunk(location.getChunk());
+            chunks.get(chunkKey).addBlock(type, location);
         }
 
         /**
@@ -266,7 +280,9 @@ public final class SiBlocks {
          * @param location Позиция блока
          */
         public void removeBlock(Location location) {
-            chunks.get(buildChunkKey(location)).removeBlock(location);
+            String chunkKey = buildChunkKey(location);
+            // if (!chunks.containsKey(chunkKey)) loadChunk(location.getChunk());
+            chunks.get(chunkKey).removeBlock(location);
         }
 
         /**

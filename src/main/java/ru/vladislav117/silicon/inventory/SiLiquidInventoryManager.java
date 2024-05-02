@@ -172,6 +172,7 @@ public class SiLiquidInventoryManager {
             ItemStack slotItem = inventory.getItem(slotIndex);
             SiLiquidContainer liquidContainer = SiLiquidContainer.parseItemStack(slotItem);
             if (liquidContainer == null) continue;
+            if (liquidContainer.getLiquidStack().getLiquidType().isVacuum()) continue;
             if (!filter.isSuitable(liquidContainer.getLiquidStack())) continue;
             int remainingVolume = Math.max(0, liquidContainer.getLiquidStack().getVolume() - (volume - removedVolume));
             if (remainingVolume == 0) {
