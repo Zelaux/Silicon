@@ -27,4 +27,13 @@ public abstract class SiLiquidFilter {
         if (inverted) return !suitable;
         return suitable;
     }
+
+    public boolean isInverted() {
+        return inverted;
+    }
+
+    public SiLiquidFilter setInverted(boolean inverted) {
+        this.inverted = inverted;
+        return this;
+    }
 }

@@ -1,6 +1,7 @@
 package ru.vladislav117.silicon.filter.item;
 
 import org.bukkit.inventory.ItemStack;
+import ru.vladislav117.silicon.filter.liquid.SiLiquidFilter;
 
 /**
  * Абстрактный фильтр предметов.
@@ -26,5 +27,14 @@ public abstract class SiItemFilter {
         boolean suitable = testItemStack(itemStack);
         if (inverted) return !suitable;
         return suitable;
+    }
+
+    public boolean isInverted() {
+        return inverted;
+    }
+
+    public SiItemFilter setInverted(boolean inverted) {
+        this.inverted = inverted;
+        return this;
     }
 }
