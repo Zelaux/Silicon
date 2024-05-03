@@ -7,6 +7,7 @@ import ru.vladislav117.silicon.filter.liquid.SiLiquidFilter;
 import ru.vladislav117.silicon.liquid.SiLiquidStack;
 import ru.vladislav117.silicon.liquid.SiLiquidType;
 import ru.vladislav117.silicon.liquid.item.SiLiquidContainer;
+import ru.vladislav117.silicon.log.SiLog;
 
 import java.util.ArrayList;
 
@@ -57,6 +58,7 @@ public class SiLiquidInventoryManager {
             ItemStack slotItem = inventory.getItem(slotIndex);
             SiLiquidContainer liquidContainer = SiLiquidContainer.parseItemStack(slotItem);
             if (liquidContainer == null) continue;
+            if (liquidContainer.getLiquidStack().getLiquidType().isVacuum()) continue;
             if (!filter.isSuitable(liquidContainer.getLiquidStack())) continue;
             volume += liquidContainer.getLiquidStack().getVolume();
         }
@@ -71,6 +73,7 @@ public class SiLiquidInventoryManager {
      * @return Может ли быть добавлена жидкость.
      */
     public boolean canBeAdded(SiLiquidType liquidType, int volume) {
+        if (liquidType.isVacuum()) return true;
         SiLiquidStack liquidStack = new SiLiquidStack(liquidType);
         int freeVolume = 0;
         for (int slotIndex = 0; slotIndex < size; slotIndex++) {
@@ -92,6 +95,7 @@ public class SiLiquidInventoryManager {
      */
     @Nullable
     public SiLiquidStack addLiquidStack(SiLiquidStack liquidStack) {
+        if (liquidStack.getLiquidType().isVacuum()) return null;
         liquidStack = liquidStack.clone();
         for (int slotIndex = 0; slotIndex < size; slotIndex++) {
             ItemStack slotItem = inventory.getItem(slotIndex);
@@ -115,6 +119,7 @@ public class SiLiquidInventoryManager {
     @Nullable
     public SiLiquidStack smartlyAddLiquidStack(SiLiquidStack liquidStack) {
         // smart adding with !smart code :)
+        if (liquidStack.getLiquidType().isVacuum()) return null;
         liquidStack = liquidStack.clone();
         for (int slotIndex = 0; slotIndex < size; slotIndex++) {
             ItemStack slotItem = inventory.getItem(slotIndex);
@@ -151,6 +156,7 @@ public class SiLiquidInventoryManager {
             ItemStack slotItem = inventory.getItem(slotIndex);
             SiLiquidContainer liquidContainer = SiLiquidContainer.parseItemStack(slotItem);
             if (liquidContainer == null) continue;
+            if (liquidContainer.getLiquidStack().getLiquidType().isVacuum()) continue;
             if (!filter.isSuitable(liquidContainer.getLiquidStack())) continue;
             volume += liquidContainer.getLiquidStack().getVolume();
             if (volume >= targetVolume) return true;
@@ -169,6 +175,10 @@ public class SiLiquidInventoryManager {
         ArrayList<SiLiquidStack> removed = new ArrayList<>();
         int removedVolume = 0;
         for (int slotIndex = 0; slotIndex < size; slotIndex++) {
+            if (removedVolume == volume) break;
+            if (removedVolume > volume) {
+                SiLog.info("Liquid removing error");
+            }
             ItemStack slotItem = inventory.getItem(slotIndex);
             SiLiquidContainer liquidContainer = SiLiquidContainer.parseItemStack(slotItem);
             if (liquidContainer == null) continue;
@@ -182,9 +192,9 @@ public class SiLiquidInventoryManager {
                 inventory.setItem(slotIndex, liquidContainer.toItemStack().toItemStack());
                 continue;
             }
-            removedVolume += volume - removedVolume;
             SiLiquidStack removedStack = liquidContainer.getLiquidStack().clone();
-            removedStack.setVolume(volume - removedVolume);
+            removedStack.setVolume(removedStack.getVolume() - remainingVolume);
+            removedVolume += removedStack.getVolume();
             removed.add(removedStack);
             liquidContainer.getLiquidStack().setVolume(remainingVolume);
             inventory.setItem(slotIndex, liquidContainer.toItemStack().toItemStack());
