@@ -89,14 +89,6 @@ public class SiCrafts {
      */
     public static void add(SiCraft craft) {
         crafts.add(craft);
-        for (ItemStack itemStack : craft.getResults()) {
-            SiItemStack result = new SiItemStack(itemStack);
-            if (result.getItemType().isUnknown()) {
-                addCraftByMaterial(result.getMaterial(), craft);
-            } else {
-                addCraftByItemType(result.getItemType(), craft);
-            }
-        }
     }
 
     /**
@@ -125,6 +117,19 @@ public class SiCrafts {
             rightArrowIcon = new SiIcon("crafts_right_arrow");
             allCategories = new SiIcon("all_categories");
             infoCrafts = new SiIcon("info_crafts");
+        });
+
+        SiEvents.addHandler(SiBuiltinEvents.CraftLoadEvent.class, event -> {
+            for (SiCraft craft : crafts) {
+                for (ItemStack itemStack : craft.getResults()) {
+                    SiItemStack result = new SiItemStack(itemStack);
+                    if (result.getItemType().isUnknown()) {
+                        addCraftByMaterial(result.getMaterial(), craft);
+                    } else {
+                        addCraftByItemType(result.getItemType(), craft);
+                    }
+                }
+            }
         });
 
         SiEvents.addHandler(SiBuiltinEvents.SecondaryLoadEndEvent.class, event -> {

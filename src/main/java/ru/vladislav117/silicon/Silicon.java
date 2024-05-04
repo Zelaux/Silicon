@@ -204,5 +204,6 @@ public final class Silicon {
         SiRegionFlags.loaders.secondaryLoad();
 
         SiEvents.call(new SiBuiltinEvents.SecondaryLoadEndEvent());
+        SiEvents.call(new SiBuiltinEvents.CraftLoadEvent());
     }
 }

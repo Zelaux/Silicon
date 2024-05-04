@@ -39,4 +39,7 @@ public final class SiBuiltinEvents {
      */
     public static class ResourcepackWriteStartEvent extends SiEvent {
     }
+
+    public static class CraftLoadEvent extends SiEvent {
+    }
 }

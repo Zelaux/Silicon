@@ -11,6 +11,7 @@ import ru.vladislav117.silicon.log.SiLog;
 import ru.vladislav117.silicon.menu.SiMenu;
 import ru.vladislav117.silicon.menu.SiMenuElement;
 import ru.vladislav117.silicon.menu.SiMenus;
+import ru.vladislav117.silicon.text.SiTextLike;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,9 +37,10 @@ public final class SiCraftMenus {
         return buildIngredientElement(new SiItemStack(ingredient.getDisplayItemStack()));
     }
 
-    public static SiMenuElement buildIngredientElement(SiItemStack item) {
+    public static SiMenuElement buildIngredientElement(SiItemStack item, ArrayList<SiTextLike> description) {
         return new SiMenuElement(getItemName(item) + "_ingredient") {{
             setItemStack(item);
+            if (description != null) setDescription(description);
             setClickHandler((player, item, event) -> {
                 ArrayList<SiCraft> crafts = SiCrafts.getCraftsFor(item);
                 if (crafts.size() == 0) return;
@@ -60,6 +62,9 @@ public final class SiCraftMenus {
                 }}).open(player);
             });
         }};
+    }
+    public static SiMenuElement buildIngredientElement(SiItemStack item) {
+        return buildIngredientElement(item, null);
     }
 
     public static SiMenu buildMenuForCategory(SiItemCategory category) {
