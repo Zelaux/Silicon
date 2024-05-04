@@ -89,11 +89,13 @@ public class SiCrafts {
      */
     public static void add(SiCraft craft) {
         crafts.add(craft);
-        SiItemStack result = new SiItemStack(craft.getResult());
-        if (result.getItemType().isUnknown()) {
-            addCraftByMaterial(result.getMaterial(), craft);
-        } else {
-            addCraftByItemType(result.getItemType(), craft);
+        for (ItemStack itemStack : craft.getResults()) {
+            SiItemStack result = new SiItemStack(itemStack);
+            if (result.getItemType().isUnknown()) {
+                addCraftByMaterial(result.getMaterial(), craft);
+            } else {
+                addCraftByItemType(result.getItemType(), craft);
+            }
         }
     }
 

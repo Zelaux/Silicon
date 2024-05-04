@@ -11,6 +11,8 @@ import ru.vladislav117.silicon.menu.SiMenu;
 import ru.vladislav117.silicon.text.SiText;
 import ru.vladislav117.silicon.text.structure.SiLinedText;
 
+import java.util.ArrayList;
+
 /**
  * Абстрактный крафт.
  */
@@ -36,6 +38,12 @@ public abstract class SiCraft {
      */
     public ItemStack getResult() {
         return result;
+    }
+
+    public ArrayList<ItemStack> getResults() {
+        return new ArrayList<>() {{
+            add(result);
+        }};
     }
 
     /**
