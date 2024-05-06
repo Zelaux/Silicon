@@ -73,7 +73,7 @@ public class SiFurnaceCraft extends SiRecipeCraft {
 
     @Override
     public Recipe buildRecipe(String name) {
-        return new FurnaceRecipe(SiNamespace.getKey(name), result, ingredient.getRecipeChoice(), (float) experience, time);
+        return new FurnaceRecipe(SiNamespace.getKey(name), getResult(), ingredient.getRecipeChoice(), (float) experience, time);
     }
 
     @Override
@@ -85,6 +85,7 @@ public class SiFurnaceCraft extends SiRecipeCraft {
 
     @Override
     public SiMenu buildMenu(String name) {
+        ItemStack result = getResult();
         return new SiMenu(name, SiMenu.row6size, new SiTextComponent(result.displayName())) {{
             setElement(20, SiCraftMenus.buildIngredientElement(ingredient));
             setElement(21, SiCrafts.rightArrowIcon.buildMenuElement().setDisplayName(SiText.string("")));
@@ -92,7 +93,7 @@ public class SiFurnaceCraft extends SiRecipeCraft {
             setElement(23, SiCrafts.rightArrowIcon.buildMenuElement().setDisplayName(SiText.string("")));
             setElement(24, SiCraftMenus.buildIngredientElement(new SiItemStack(result)));
 
-            buildStandardButtons(this, new SiItemStack(result));
+            buildStandardButtons(this, results);
         }};
     }
 }

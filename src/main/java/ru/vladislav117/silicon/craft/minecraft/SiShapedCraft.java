@@ -149,7 +149,7 @@ public class SiShapedCraft extends SiRecipeCraft {
 
     @Override
     public Recipe buildRecipe(String name) {
-        ShapedRecipe recipe = new ShapedRecipe(SiNamespace.getKey(name), result);
+        ShapedRecipe recipe = new ShapedRecipe(SiNamespace.getKey(name), getResult());
         if (shape.size() == 1) {
             recipe.shape(shape.get(0));
         } else if (shape.size() == 2) {
@@ -173,6 +173,7 @@ public class SiShapedCraft extends SiRecipeCraft {
 
     @Override
     public SiMenu buildMenu(String name) {
+        ItemStack result = getResult();
         return new SiMenu(name, SiMenu.row6size, new SiTextComponent(result.displayName())) {{
             for (int row : new int[]{10, 19, 28}) {
                 for (int i = 0; i < 3; i++) {
@@ -224,7 +225,7 @@ public class SiShapedCraft extends SiRecipeCraft {
             setElement(24, SiCrafts.rightArrowIcon.buildMenuElement().setDisplayName(SiText.string("")));
             setElement(25, SiCraftMenus.buildIngredientElement(new SiItemStack(result)));
 
-            buildStandardButtons(this, new SiItemStack(result));
+            buildStandardButtons(this, results);
         }};
     }
 }

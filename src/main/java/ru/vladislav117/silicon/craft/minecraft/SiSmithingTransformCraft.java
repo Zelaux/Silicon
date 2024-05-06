@@ -346,7 +346,7 @@ public class SiSmithingTransformCraft extends SiRecipeCraft {
 
     @Override
     public Recipe buildRecipe(String name) {
-        return new SmithingTransformRecipe(SiNamespace.getKey(name), result, template.getRecipeChoice(), base.getRecipeChoice(), addition.getRecipeChoice(), saveNbt);
+        return new SmithingTransformRecipe(SiNamespace.getKey(name), getResult(), template.getRecipeChoice(), base.getRecipeChoice(), addition.getRecipeChoice(), saveNbt);
     }
 
     @Override
@@ -358,6 +358,7 @@ public class SiSmithingTransformCraft extends SiRecipeCraft {
 
     @Override
     public SiMenu buildMenu(String name) {
+        ItemStack result = getResult();
         return new SiMenu(name, SiMenu.row6size, new SiTextComponent(result.displayName())) {{
             setElement(19, SiCraftMenus.buildIngredientElement(template));
             setElement(20, SiCraftMenus.buildIngredientElement(base));
@@ -367,7 +368,7 @@ public class SiSmithingTransformCraft extends SiRecipeCraft {
             setElement(24, SiCrafts.rightArrowIcon.buildMenuElement().setDisplayName(SiText.string("")));
             setElement(25, SiCraftMenus.buildIngredientElement(new SiItemStack(result)));
 
-            buildStandardButtons(this, new SiItemStack(result));
+            buildStandardButtons(this, results);
         }};
     }
 }

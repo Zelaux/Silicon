@@ -48,7 +48,7 @@ public class SiStonecutterCraft extends SiRecipeCraft {
 
     @Override
     public Recipe buildRecipe(String name) {
-        return new StonecuttingRecipe(SiNamespace.getKey(name), result, ingredient.getRecipeChoice());
+        return new StonecuttingRecipe(SiNamespace.getKey(name), getResult(), ingredient.getRecipeChoice());
     }
 
     @Override
@@ -60,6 +60,7 @@ public class SiStonecutterCraft extends SiRecipeCraft {
 
     @Override
     public SiMenu buildMenu(String name) {
+        ItemStack result = getResult();
         return new SiMenu(name, SiMenu.row6size, new SiTextComponent(result.displayName())) {{
             setElement(20, SiCraftMenus.buildIngredientElement(ingredient));
             setElement(21, SiCrafts.rightArrowIcon.buildMenuElement().setDisplayName(SiText.string("")));
@@ -67,7 +68,7 @@ public class SiStonecutterCraft extends SiRecipeCraft {
             setElement(23, SiCrafts.rightArrowIcon.buildMenuElement().setDisplayName(SiText.string("")));
             setElement(24, SiCraftMenus.buildIngredientElement(new SiItemStack(result)));
 
-            buildStandardButtons(this, new SiItemStack(result));
+            buildStandardButtons(this, results);
         }};
     }
 }

@@ -41,7 +41,7 @@ public class SiShapelessCraft extends SiRecipeCraft {
 
     @Override
     public Recipe buildRecipe(String name) {
-        return new ShapelessRecipe(SiNamespace.getKey(name), result) {{
+        return new ShapelessRecipe(SiNamespace.getKey(name), getResult()) {{
             for (SiCraftIngredient ingredient : ingredients) addIngredient(ingredient.getRecipeChoice());
         }};
     }
@@ -55,6 +55,7 @@ public class SiShapelessCraft extends SiRecipeCraft {
 
     @Override
     public SiMenu buildMenu(String name) {
+        ItemStack result = getResult();
         return new SiMenu(name, SiMenu.row6size, new SiTextComponent(result.displayName())) {{
             for (int row : new int[]{10, 19, 28}) {
                 for (int i = 0; i < 3; i++) {
@@ -78,7 +79,7 @@ public class SiShapelessCraft extends SiRecipeCraft {
             setElement(24, SiCrafts.rightArrowIcon.buildMenuElement().setDisplayName(SiText.string("")));
             setElement(25, SiCraftMenus.buildIngredientElement(new SiItemStack(result)));
 
-            buildStandardButtons(this, new SiItemStack(result));
+            buildStandardButtons(this, results);
         }};
     }
 }

@@ -19,7 +19,7 @@ import java.util.ArrayList;
 public abstract class SiCraft {
     @Nullable
     protected String name = null;
-    protected ItemStack result;
+    protected ArrayList<ItemStack> results = new ArrayList<>();
 
     /**
      * Создание нового крафта.
@@ -27,23 +27,26 @@ public abstract class SiCraft {
      * @param result Результат крафта
      */
     public SiCraft(ItemStack result) {
-        this.result = result.clone();
+        this.results.add(result);
         SiCrafts.add(this);
     }
 
     /**
-     * Получение результата крафта.
+     * Получение первого результата крафта.
      *
-     * @return Результат крафта.
+     * @return Первый результат крафта.
      */
     public ItemStack getResult() {
-        return result;
+        return results.get(0);
     }
 
+    /**
+     * Получение результатов крафта.
+     *
+     * @return Результаты крафта.
+     */
     public ArrayList<ItemStack> getResults() {
-        return new ArrayList<>() {{
-            add(result);
-        }};
+        return results;
     }
 
     /**
@@ -154,12 +157,18 @@ public abstract class SiCraft {
 
     public abstract SiMenu buildMenu(String name);
 
-    protected void buildStandardButtons(SiMenu menu, SiItemStack result) {
+    protected void buildStandardButtons(SiMenu menu, ArrayList<ItemStack> results) {
         menu.setElement(45, SiCrafts.allCategories.buildMenuElement(menu.getName() + "_category_crafts").setDisplayName(SiText.string("Все категории")).setClickHandler((player, itemStack, event) -> {
             SiCraftMenus.getCategoriesMenu().open(player);
         }));
+        ArrayList<SiItemCategory> categories = new ArrayList<>();
+        for (ItemStack result : results) {
+            for (SiItemCategory category : new SiItemStack(result).getItemType().getCategories()) {
+                if (!categories.contains(category)) categories.add(category);
+            }
+        }
         int categoryIndex = 0;
-        for (SiItemCategory category : result.getItemType().getCategories()) {
+        for (SiItemCategory category : categories) {
             menu.setElement(46 + categoryIndex, SiCraftMenus.buildElementForCategory(category));
             categoryIndex++;
             if (categoryIndex >= 53) break;
