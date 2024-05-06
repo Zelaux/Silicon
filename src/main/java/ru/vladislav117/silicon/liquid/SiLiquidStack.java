@@ -164,6 +164,15 @@ public class SiLiquidStack implements SiCloneable {
         return this;
     }
 
+    public String serialize() {
+        return liquidType.getName() + "," + volume + "," + temperature;
+    }
+
+    public static SiLiquidStack deserialize(String string) {
+        String[] parts = string.split(",");
+        return new SiLiquidStack(SiLiquidTypes.all.get(parts[0]), Integer.parseInt(parts[1]), Double.parseDouble(parts[2]));
+    }
+
     @Override
     public String toString() {
         return "SiLiquidStack{" +
